@@ -3567,14 +3567,14 @@ function maintainNativeIndexes(openReq, reject) {
     // NB: the only thing we're supporting here is the declared indexing
     // fields nothing more.
     const expectedIndexes = results.filter(function (row) {
-      return row.deleted === 0 && row.nativeIndex && row.revs[row.rev].data.views;
+      return row.deleted === 0 && row.revs[row.rev].data.views;
     }).map(function (row) {
       return row.revs[row.rev].data;
     }).reduce(function (indexes, ddoc) {
       return Object.keys(ddoc.views).reduce(function (acc, viewName) {
         const fields = rawIndexFields(ddoc, viewName);
 
-        if (fields && fields.length > 0) {
+        if (fields && fields.length > 0 && isNativeIndexView(ddoc, viewName)) {
           acc[naturalIndexName(fields)] = correctIndexFields(fields);
         }
 
