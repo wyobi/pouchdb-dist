@@ -5562,7 +5562,8 @@ async function createIndex$1(db, requestDef) {
   const signature = ddocName + '/' + viewName;
   await abstractMapper$1(db).query.call(db, signature, {
     limit: 0,
-    reduce: false
+    reduce: false,
+    stale: requestDef.stale
   });
   return {
     id: ddocId,
