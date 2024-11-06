@@ -5543,6 +5543,12 @@ async function createIndex$1(db, requestDef) {
       }
     };
 
+    if (requestDef.options) {
+      Object.keys(requestDef.options).forEach(function (opt) {
+        doc.views[viewName].options[opt] = requestDef.options[opt];
+      });
+    }
+
     return doc;
   }
 

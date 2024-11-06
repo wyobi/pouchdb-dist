@@ -3482,6 +3482,15 @@ function isPartialFilterView(ddoc, viewName) {
     ddoc.views[viewName].options.def.partial_filter_selector;
 }
 
+/**
+ * true if the view is has a "partial_filter_selector".
+ */
+function isNativeIndexView(ddoc, viewName) {
+  return viewName in ddoc.views &&
+    ddoc.views[viewName].options &&
+    ddoc.views[viewName].options.nativeIndex;
+}
+
 function naturalIndexName(fields) {
   return '_find_idx/' + fields.join('/');
 }
@@ -3558,7 +3567,7 @@ function maintainNativeIndexes(openReq, reject) {
     // NB: the only thing we're supporting here is the declared indexing
     // fields nothing more.
     const expectedIndexes = results.filter(function (row) {
-      return row.deleted === 0 && row.revs[row.rev].data.views;
+      return row.deleted === 0 && row.nativeIndex && row.revs[row.rev].data.views;
     }).map(function (row) {
       return row.revs[row.rev].data;
     }).reduce(function (indexes, ddoc) {
@@ -4914,7 +4923,7 @@ function query(idb, signature, opts, fallback) {
 
   return new Promise(function (resolve, reject) {
     pdb.get('_design/' + parts[0]).then(function (ddoc) {
-      if (!opts.nativeIndex || isPartialFilterView(ddoc, parts[1])) { //Make native indexes explicit due to null/schema issues as well as adhoc indexes corrupting db
+      if (!isNativeIndexView(ddoc, parts[1]) || isPartialFilterView(ddoc, parts[1])) { //Make native indexes explicit due to null/schema issues as well as adhoc indexes corrupting db
         // Fix for #8522
         // An IndexedDB index is always over all entries. And there is no way to filter them.
         // Therefore the normal findAbstractMapper will be used
