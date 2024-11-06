@@ -1,4 +1,4 @@
-// PouchDB localStorage plugin 7.0.0-prerelease
+// PouchDB localStorage plugin 9.0.0
 // Based on localstorage-down: https://github.com/No9/localstorage-down
 // 
 // (c) 2012-2024 Dale Harvey and the PouchDB team
@@ -22288,7 +22288,7 @@ PouchDB$1.fetch = function (url, opts) {
 PouchDB$1.prototype.activeTasks = PouchDB$1.activeTasks = new ActiveTasks();
 
 // managed automatically by set-version.js
-var version$1 = "7.0.0-prerelease";
+var version$1 = "9.0.0";
 
 // this would just be "return doc[field]", but fields
 // can be "deep" due to dot notation
@@ -22769,6 +22769,11 @@ function createFieldSorter(sort) {
 
 function filterInMemoryFields(rows, requestDef, inMemoryFields) {
   rows = rows.filter(function (row) {
+    if (row.doc === undefined) { //Depending on purged actions and purge length OR speed of processing you are going to have docs in indexes that dont exist
+        console.log('Document not found, but still in index!', row.id);
+        return false;
+    }
+
     return rowFilter(row.doc, requestDef.selector, inMemoryFields);
   });
 

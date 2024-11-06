@@ -1,4 +1,4 @@
-// pouchdb-find plugin 7.0.0-prerelease
+// pouchdb-find plugin 9.0.0
 // Based on Mango: https://github.com/cloudant/mango
 // 
 // (c) 2012-2024 Dale Harvey and the PouchDB team
@@ -3206,6 +3206,11 @@ function createFieldSorter(sort) {
 
 function filterInMemoryFields(rows, requestDef, inMemoryFields) {
   rows = rows.filter(function (row) {
+    if (row.doc === undefined) { //Depending on purged actions and purge length OR speed of processing you are going to have docs in indexes that dont exist
+        console.log('Document not found, but still in index!', row.id);
+        return false;
+    }
+
     return rowFilter(row.doc, requestDef.selector, inMemoryFields);
   });
 

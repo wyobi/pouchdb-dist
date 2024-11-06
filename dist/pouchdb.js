@@ -1,4 +1,4 @@
-// PouchDB 7.0.0-prerelease
+// PouchDB 9.0.0
 // 
 // (c) 2012-2024 Dale Harvey and the PouchDB team
 // PouchDB may be freely distributed under the Apache license, version 2.0.
@@ -5509,7 +5509,7 @@ PouchDB.fetch = function (url, opts) {
 PouchDB.prototype.activeTasks = PouchDB.activeTasks = new ActiveTasks();
 
 // managed automatically by set-version.js
-var version = "7.0.0-prerelease";
+var version = "9.0.0";
 
 // this would just be "return doc[field]", but fields
 // can be "deep" due to dot notation
@@ -6246,6 +6246,11 @@ function createFieldSorter(sort) {
 
 function filterInMemoryFields(rows, requestDef, inMemoryFields) {
   rows = rows.filter(function (row) {
+    if (row.doc === undefined) { //Depending on purged actions and purge length OR speed of processing you are going to have docs in indexes that dont exist
+        console.log('Document not found, but still in index!', row.id);
+        return false;
+    }
+
     return rowFilter(row.doc, requestDef.selector, inMemoryFields);
   });
 
