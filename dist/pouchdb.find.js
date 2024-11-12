@@ -3207,7 +3207,6 @@ function createFieldSorter(sort) {
 function filterInMemoryFields(rows, requestDef, inMemoryFields) {
   rows = rows.filter(function (row) {
     if (row.doc === undefined) { //Depending on purged actions and purge length OR speed of processing you are going to have docs in indexes that dont exist
-        console.log('Document not found, but still in index!', row.id);
         return false;
     }
 
