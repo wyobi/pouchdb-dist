@@ -1,7 +1,7 @@
 // pouchdb-find plugin 9.0.0
 // Based on Mango: https://github.com/cloudant/mango
 // 
-// (c) 2012-2024 Dale Harvey and the PouchDB team
+// (c) 2012-2025 Dale Harvey and the PouchDB team
 // PouchDB may be freely distributed under the Apache license, version 2.0.
 // For all details and documentation:
 // http://pouchdb.com
